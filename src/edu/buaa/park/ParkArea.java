@@ -7,8 +7,8 @@ import java.util.LinkedList;
 public class ParkArea {
 
 	private int _max_place;
-	private ArrayList<Place> _all_places;
-	private LinkedList<Place> _free_place;
+	private ArrayList<Place> _all_places = new ArrayList<Place>();
+	private LinkedList<Place> _free_place = new LinkedList<Place>();
 	
 	public ParkArea(int max_place)
 	{
@@ -23,29 +23,46 @@ public class ParkArea {
 		_max_place = max_place;
 		for(int i=0;i<max_place;i++)
 		{
-			Place p = new Place(i,String.format("%d","一层第%d个车位"));
+			Place p = new Place(i,String.format("一层第%d个车位",i));
 			_all_places.add(p);
 			_free_place.add(p);
 		}
 	}
 	
+	/*
+	 * 空闲车位数
+	 */
 	public int get_free_count()
 	{
 		return _free_place.size();
 	}
 	
+	/*
+	 * 占用车位数
+	 */
+	public int get_used_count()
+	{
+		return _max_place - _free_place.size();
+	}
+	
+	/*
+	 * 停车拿票
+	 */
 	public Ticket parkCar(Car car)
 	{
-		if(_free_place.size() == 0)
-			throw new ParkException(0,"无停车位");
+		if(_free_place.isEmpty())
+			return null;
 		
-		Place p = _free_place.pop();
+		Place p = _free_place.removeFirst();
 		p.parkCar(car);
 		
 		Ticket res = new Ticket(p.get_pos());
 		return res;
 	}
 	
+	/*
+	 * 根据票据取车
+	 */
 	public Car removeCar(Ticket ticket)
 	{
 		int pos = ticket.get_position();
@@ -56,7 +73,7 @@ public class ParkArea {
 		
 		Car c = p.removeCar();
 		
-		_free_place.add(p);
+		_free_place.addFirst(p);
 		return c;
 	}
 	
