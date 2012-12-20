@@ -46,13 +46,59 @@ public abstract class BaseParkingBoy implements IParkingBoy
 		}
 	}
 	
-	public void removeParkArea(ParkArea area)
+	public void removeAllParkArea()
 	{
-		assert(area != null);
-		if(!_park_areas.containsKey(area))
+		_park_areas.clear();
+		_free_count = -1;
+	}
+	
+	protected void adjustFreeCount(boolean isFree)
+	{
+		if(_free_count >= 0)
 		{
-			_park_areas.remove(area.getNO());
-			_free_count = -1;
+			if(isFree)
+				_free_count++;
+			else
+				_free_count--;
 		}
+	}
+
+	protected abstract ParkArea selectParkArea();
+	
+	@Override
+	public Ticket parkCar(Car car) {
+		if(car == null)
+			return null;
+		
+		Ticket ticket = null;
+		
+		ParkArea p = selectParkArea();
+		if(p != null)
+		{
+			ticket = p.parkCar(car);
+			if(ticket != null)
+			{
+				adjustFreeCount(false);
+				ticket.set_park_boy_NO(_NO);
+			}
+		}
+		return ticket;
+	}
+
+	@Override
+	public Car removeCar(Ticket ticket) {
+		if(ticket == null || ticket.get_park_boy_NO() != getNO())
+			return null;
+		
+		Car res = null;
+		ParkArea p = _park_areas.get(ticket.get_park_area_NO());
+		if(p != null)
+		{
+			res = p.removeCar(ticket);
+			if(res != null)
+				adjustFreeCount(true);
+		}
+		
+		return res;
 	}
 }

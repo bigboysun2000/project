@@ -16,9 +16,9 @@ public interface IParkingBoy {
 	public void addParkArea(ParkArea area);
 	
 	/*
-	 * 从这个小盆友手里拿走一个停车场
+	 * 收回小盆友管理的所有停车场
 	 */
-	public void removeParkArea(ParkArea area);
+	public void removeAllParkArea();
 	
 	/*
 	 * 小朋友的名字
