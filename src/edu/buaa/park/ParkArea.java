@@ -7,14 +7,16 @@ import java.util.LinkedList;
 public class ParkArea {
 
 	private int _max_place;
+	private int _NO;
 	private ArrayList<Place> _all_places = new ArrayList<Place>();
 	private LinkedList<Place> _free_place = new LinkedList<Place>();
 	
-	public ParkArea(int max_place)
+	public ParkArea(int NO, int max_place)
 	{
 		if(max_place <= 0)
 			throw new ParkException(0,"停车位个数错误");
 		
+		_NO = NO;
 		init(max_place);
 	}
 	
@@ -56,10 +58,14 @@ public class ParkArea {
 		Place p = _free_place.removeFirst();
 		p.parkCar(car);
 		
-		Ticket res = new Ticket(p.get_pos());
+		Ticket res = new Ticket(_NO,p.get_pos());
 		return res;
 	}
 	
+	public int getNO() {
+		return _NO;
+	}
+
 	/*
 	 * 根据票据取车
 	 */

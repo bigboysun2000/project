@@ -13,7 +13,7 @@ public class ParkAreaTest {
 	@Test
 	public void park_a_car_should_be_success()
 	{
-		ParkArea park_area = new ParkArea(10);
+		ParkArea park_area = new ParkArea(1,10);
 		
 		int pre_count = park_area.get_free_count();
 		
@@ -30,7 +30,7 @@ public class ParkAreaTest {
 	@Test
 	public void park_full_should_return_null()
 	{
-		ParkArea park_area = new ParkArea(10);
+		ParkArea park_area = new ParkArea(1,10);
 		
 		int i =0;
 		for(;i<100;i++)
@@ -52,7 +52,7 @@ public class ParkAreaTest {
 	@Test 
 	public void park_and_remove_should_work()
 	{
-		ParkArea park_area = new ParkArea(10);
+		ParkArea park_area = new ParkArea(2,10);
 		
 		int pre_free_count = park_area.get_free_count();
 		Car c = new Car();
