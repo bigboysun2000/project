@@ -15,12 +15,12 @@ public class ParkAreaTest {
 	{
 		ParkArea park_area = new ParkArea(1,10);
 		
-		int pre_count = park_area.get_free_count();
+		int pre_count = park_area.getFreeCount();
 		
 		Car c = new Car();
-		Ticket ticket = park_area.parkCar(c);
+		Ticket ticket = park_area.parkCar(c, null);
 		
-		Assert.assertEquals(pre_count - 1,park_area.get_free_count());
+		Assert.assertEquals(pre_count - 1,park_area.getFreeCount());
 		Assert.assertNotNull(ticket);
 	}
 	
@@ -36,7 +36,7 @@ public class ParkAreaTest {
 		for(;i<100;i++)
 		{
 			Car c = new Car();
-			Ticket t = park_area.parkCar(c);
+			Ticket t = park_area.parkCar(c,null);
 			if(t == null)
 				break;
 		}
@@ -54,19 +54,19 @@ public class ParkAreaTest {
 	{
 		ParkArea park_area = new ParkArea(2,10);
 		
-		int pre_free_count = park_area.get_free_count();
+		int pre_free_count = park_area.getFreeCount();
 		Car c = new Car();
-		Ticket ticket = park_area.parkCar(c);
+		Ticket ticket = park_area.parkCar(c,null);
 		//存入应该返回成功，ticket不能为空
 		Assert.assertNotNull(ticket);
 		//停入一辆车后，空车位减1
-		Assert.assertEquals(pre_free_count - 1, park_area.get_free_count());
+		Assert.assertEquals(pre_free_count - 1, park_area.getFreeCount());
 		//停入一辆车后，已经使用的车位加1
-		Assert.assertEquals(10 - pre_free_count + 1, park_area.get_used_count());
+		Assert.assertEquals(10 - pre_free_count + 1, park_area.getMaxCount() - park_area.getFreeCount());
 		
 		
 		Car c1 = new Car();
-		park_area.parkCar(c1);
+		park_area.parkCar(c1,null);
 		
 		
 		Car r = park_area.removeCar(ticket);

@@ -1,15 +1,17 @@
 package edu.buaa.park;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 //停车场类
-public class ParkArea {
+public class ParkArea  implements IParkPlaceCollection{
 
 	private int _max_place;
 	private int _NO;
 	private ArrayList<Place> _all_places = new ArrayList<Place>();
 	private LinkedList<Place> _free_place = new LinkedList<Place>();
+	private LinkedList<Place> _used_place = new LinkedList<Place>();
 	
 	public ParkArea(int NO, int max_place)
 	{
@@ -34,7 +36,7 @@ public class ParkArea {
 	/*
 	 * 空闲车位数
 	 */
-	public int get_free_count()
+	public int getFreeCount()
 	{
 		return _free_place.size();
 	}
@@ -42,23 +44,24 @@ public class ParkArea {
 	/*
 	 * 占用车位数
 	 */
-	public int get_used_count()
+	public int getMaxCount()
 	{
-		return _max_place - _free_place.size();
+		return _max_place;
 	}
 	
 	/*
 	 * 停车拿票
 	 */
-	public Ticket parkCar(Car car)
+	public Ticket parkCar(Car car, Object context)
 	{
 		if(_free_place.isEmpty())
 			return null;
 		
 		Place p = _free_place.removeFirst();
-		p.parkCar(car);
+		int cookie = p.parkCar(car,context);
+		_used_place.addLast(p);
 		
-		Ticket res = new Ticket(_NO,p.get_pos());
+		Ticket res = new Ticket(_NO,p.get_pos(),cookie);
 		return res;
 	}
 	
@@ -71,16 +74,23 @@ public class ParkArea {
 	 */
 	public Car removeCar(Ticket ticket)
 	{
-		int pos = ticket.get_position();
+		int pos = ticket.getPosition();
 		Place p = _all_places.get(pos);
 		
 		if(p.is_free())
 			return null;
 		
-		Car c = p.removeCar();
-		
-		_free_place.addFirst(p);
+		Car c = p.removeCar(ticket.getCookie());
+		if(c != null)
+		{
+			_used_place.remove(p);		
+			_free_place.addFirst(p);
+		}
 		return c;
 	}
 	
+	public Iterator<Place> enumPlaceUsed()
+	{
+		return _used_place.iterator();
+	}
 }

@@ -1,5 +1,7 @@
 package edu.buaa.park;
 
+import java.util.Iterator;
+
 /*
  * 停车仔接口
  */
@@ -21,6 +23,11 @@ public interface IParkingBoy {
 	public void removeAllParkArea();
 	
 	/*
+	 * 返回这个小盆友负责的停车场
+	 */
+	public Iterator<ParkArea> getParkAreaIterator();
+	
+	/*
 	 * 小朋友的名字
 	 */
 	public String getName();
@@ -39,4 +46,11 @@ public interface IParkingBoy {
 	 * 获取空车位个数
 	 */
 	public int getFreeCount();
+	/*
+	 * 一共有多少停车位
+	 */
+	int getMaxCount();
+	
+	//告诉他，他的经理是谁
+	public void setManager(IParkingBoy man);
 }

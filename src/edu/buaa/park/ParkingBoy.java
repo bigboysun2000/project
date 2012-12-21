@@ -1,21 +1,23 @@
 package edu.buaa.park;
 
+import java.util.Iterator;
+
 public class ParkingBoy extends BaseParkingBoy{
 
-	public ParkingBoy(int NO, String name) {
+	IParkingStrategy<ParkArea> _parking_strategy;
+	
+	public ParkingBoy(int NO, String name, IParkingStrategy<ParkArea> park_strategy) {
 		super(NO, name);
+		_parking_strategy = park_strategy;
 	}
 
 	@Override
 	protected ParkArea selectParkArea() {
-		for(ParkArea p:_park_areas.values())
-		{
-			if(p.get_free_count() > 0)
-				return p;
-		}
-		return null;
+		return _parking_strategy.selectParkArea(_park_areas.values().iterator());
 	}
 
-
-
+	@Override
+	public Iterator<Place> enumPlaceUsed() {
+		return null;
+	}
 }

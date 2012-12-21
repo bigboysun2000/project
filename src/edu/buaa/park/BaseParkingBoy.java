@@ -1,30 +1,33 @@
 package edu.buaa.park;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-public abstract class BaseParkingBoy implements IParkingBoy
+public abstract class BaseParkingBoy implements IParkingBoy, IParkPlaceCollection
 {
 	private int _NO;
 	private String _name;
 	protected HashMap<Integer,ParkArea> _park_areas = new HashMap<Integer,ParkArea>();
-	private int _free_count;
+	private IParkingBoy _manager = null;
+	
+	public void setManager(IParkingBoy man)
+	{
+		_manager = man;
+	}
 	
 	public int getFreeCount()
 	{
-		if(_free_count >= 0)
-			return _free_count;
-		
-		_free_count = 0;
+		int count = 0;
 		for(ParkArea p:_park_areas.values())
-			_free_count += p.get_free_count();
+			count += p.getFreeCount();
 		
-		return _free_count;
+		return count;
 	}
 	
 	public BaseParkingBoy(int NO, String name) {
 		_NO = NO;
 		_name = name;
-		_free_count = -1;
+		
 	}
 	
 	public int getNO()
@@ -42,25 +45,12 @@ public abstract class BaseParkingBoy implements IParkingBoy
 		if(!_park_areas.containsKey(area))
 		{
 			_park_areas.put(area.getNO(), area);
-			_free_count = -1;
 		}
 	}
 	
 	public void removeAllParkArea()
 	{
 		_park_areas.clear();
-		_free_count = -1;
-	}
-	
-	protected void adjustFreeCount(boolean isFree)
-	{
-		if(_free_count >= 0)
-		{
-			if(isFree)
-				_free_count++;
-			else
-				_free_count--;
-		}
 	}
 
 	protected abstract ParkArea selectParkArea();
@@ -75,30 +65,57 @@ public abstract class BaseParkingBoy implements IParkingBoy
 		ParkArea p = selectParkArea();
 		if(p != null)
 		{
-			ticket = p.parkCar(car);
+			ticket = p.parkCar(car,this);
 			if(ticket != null)
-			{
-				adjustFreeCount(false);
-				ticket.set_park_boy_NO(_NO);
-			}
+				ticket.setParkingBoyNO(_NO);
 		}
+		
+		if(ticket != null)
+			System.out.println(String.format("%s 成功将客户的车停入第%d停车场的第%d个位置",_name,ticket.getParkingAreaNO(),ticket.getPosition()));
+		else
+			System.out.println(String.format("由于%s管理的停车场满，所以，没有将客户的车成功停放!",_name));
+		
 		return ticket;
 	}
 
 	@Override
 	public Car removeCar(Ticket ticket) {
-		if(ticket == null || ticket.get_park_boy_NO() != getNO())
+		if(ticket == null)
 			return null;
 		
 		Car res = null;
-		ParkArea p = _park_areas.get(ticket.get_park_area_NO());
-		if(p != null)
+		if(ticket.getParkingBoyNO() != getNO() || !_park_areas.containsKey(ticket.getParkingAreaNO()))
 		{
-			res = p.removeCar(ticket);
-			if(res != null)
-				adjustFreeCount(true);
+			//我搞不定了，给经理处理
+			if(_manager != null)
+				res = _manager.removeCar(ticket);
+		}
+		else
+		{
+			
+			ParkArea p = _park_areas.get(ticket.getParkingAreaNO());
+			if(p != null)
+				res = p.removeCar(ticket);
 		}
 		
+		if(res != null)
+			System.out.println(String.format("%s 在第%d停车场的第%d个位置成功取出客户的车!",_name,ticket.getParkingAreaNO(),ticket.getPosition()));
+		else
+			System.out.println(String.format("%s 在第%d停车场的第%d个位置取车失败!",_name,ticket.getParkingAreaNO(),ticket.getPosition()));
 		return res;
+	}
+	
+	@Override
+	public int getMaxCount() {
+		int count = 0;
+		for(ParkArea p:_park_areas.values())
+			count += p.getMaxCount();
+		
+		return count;
+	}
+	
+	public Iterator<ParkArea> getParkAreaIterator()
+	{
+		return _park_areas.values().iterator();
 	}
 }
