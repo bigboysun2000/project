@@ -118,4 +118,19 @@ public abstract class BaseParkingBoy implements IParkingBoy, IParkPlaceCollectio
 	{
 		return _park_areas.values().iterator();
 	}
+	
+	public void printStatus()
+	{
+		System.out.println(String.format("停车崽名:%s",_name));
+		System.out.println("");
+		for(ParkArea p:_park_areas.values())
+		{
+			System.out.println(String.format("停车场编号:%d", p.getNO()));
+			System.out.println(String.format("    车位数:%d", p.getMaxCount()));
+			System.out.println(String.format("    空位数:%d",p.getFreeCount()));
+		}
+		System.out.println("");
+		System.out.println(String.format("Total车位数:%d",getMaxCount()));
+		System.out.println(String.format("Total空位数:%d", getFreeCount()));
+	}
 }

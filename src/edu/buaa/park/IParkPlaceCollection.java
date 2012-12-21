@@ -5,5 +5,5 @@ import java.util.Iterator;
 public interface IParkPlaceCollection {
 	int getFreeCount();
 	int getMaxCount();
-	public Iterator<Place> enumPlaceUsed();
+	//public Iterator<Place> enumPlaceUsed();
 }

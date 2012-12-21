@@ -18,7 +18,7 @@ public class ParkingService {
 	
 	private void init(int ParkingBoyCount, int ParkAreaCount)
 	{
-		int count = ParkingBoyCount / ParkAreaCount;
+		int count =  ParkAreaCount /ParkingBoyCount;
 		
 		for(int i=0;i<ParkingBoyCount;i++)
 		{
@@ -75,9 +75,7 @@ public class ParkingService {
 		for(ParkArea p:_parking_areas)
 		{
 			
-			System.out.println(String.format("停车场编号:%d",p.getNO()));
-			System.out.println(String.format("车位数:%d",p.getMaxCount()));
-			System.out.println(String.format("空位数:%d",p.getFreeCount()));
+			p.printStatus();
 			System.out.println("");
 			
 			count += p.getMaxCount();
@@ -87,6 +85,15 @@ public class ParkingService {
 		System.out.println(String.format("Totle车位数:%d",count));
 		System.out.println(String.format("Totle空位数:%d",free));
 		
+	}
+	
+	public void printParkingBoyStatus()
+	{
+		for(IParkingBoy boy:_parking_boys)
+		{
+			System.out.println("");
+			((BaseParkingBoy)boy).printStatus();
+		}
 	}
 	
 }

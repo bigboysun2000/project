@@ -11,7 +11,6 @@ public class ParkArea  implements IParkPlaceCollection{
 	private int _NO;
 	private ArrayList<Place> _all_places = new ArrayList<Place>();
 	private LinkedList<Place> _free_place = new LinkedList<Place>();
-	private LinkedList<Place> _used_place = new LinkedList<Place>();
 	
 	public ParkArea(int NO, int max_place)
 	{
@@ -59,7 +58,6 @@ public class ParkArea  implements IParkPlaceCollection{
 		
 		Place p = _free_place.removeFirst();
 		int cookie = p.parkCar(car,context);
-		_used_place.addLast(p);
 		
 		Ticket res = new Ticket(_NO,p.get_pos(),cookie);
 		return res;
@@ -81,16 +79,17 @@ public class ParkArea  implements IParkPlaceCollection{
 			return null;
 		
 		Car c = p.removeCar(ticket.getCookie());
-		if(c != null)
-		{
-			_used_place.remove(p);		
+		if(c != null)	
 			_free_place.addFirst(p);
-		}
+
 		return c;
 	}
 	
-	public Iterator<Place> enumPlaceUsed()
+	public void printStatus()
 	{
-		return _used_place.iterator();
+		System.out.println(String.format("停车场编号:%d",_NO));
+		System.out.println(String.format("车位数:%d",_max_place));
+		System.out.println(String.format("空位数:%d",_free_place.size()));
 	}
+	
 }

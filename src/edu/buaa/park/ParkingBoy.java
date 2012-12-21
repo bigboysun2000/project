@@ -15,9 +15,4 @@ public class ParkingBoy extends BaseParkingBoy{
 	protected ParkArea selectParkArea() {
 		return _parking_strategy.selectParkArea(_park_areas.values().iterator());
 	}
-
-	@Override
-	public Iterator<Place> enumPlaceUsed() {
-		return null;
-	}
 }

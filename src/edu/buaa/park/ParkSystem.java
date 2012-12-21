@@ -36,6 +36,7 @@ public class ParkSystem {
 			}
 		}
 		
+		
 		System.out.println("");
 		System.out.println("");
 		System.out.println("");
@@ -44,5 +45,7 @@ public class ParkSystem {
 		System.out.println("");
 		
 		service.printParkAreaStatus();
+		
+		service.printParkingBoyStatus();
 	}
 }
