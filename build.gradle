@@ -1,0 +1,40 @@
+apply plugin:"java"
+apply plugin: "idea"
+
+//sourceCompatibility=1.7
+
+//[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.10'
+}
+
+test { 
+ 		 useJUnit()
+}
+
+/*
+sourceSets {
+    main {
+        java {
+            srcDir 'src/java'
+            println java.srcDirs
+
+        }
+        resources {
+            srcDir 'src/resources'
+        }
+    } 
+}
+*/
+jar{
+    manifest{
+        archiveName='park.jar'
+	manifest.attributes 'Main-Class': 'edu.buaa.park.ParkSystem'
+    }
+
+}
